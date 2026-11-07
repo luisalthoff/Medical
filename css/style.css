@@ -1,6 +1,9 @@
-:root {
+:root 
+{
   --corAzul: #38bdf8;
   --corVerm: #ff3b30;
+  --corBord: #d0d0d0;
+  --corShad: #252525;
 }
 
 * {
@@ -39,7 +42,8 @@ body {
 
 /* ================= LOGIN WINDOW ================== */
 
-dialog {
+dialog 
+{
   border: none;
   border-radius: 12px;
   padding: 2rem;
@@ -48,11 +52,13 @@ dialog {
 }
 
 /* Modern native backdrop styling */
-dialog::backdrop {
+dialog::backdrop 
+{
   background: rgba(0, 0, 0, 0.2);
 }
 
-form {
+form 
+{
   display: grid;
   gap: 1rem;
 }
@@ -62,9 +68,11 @@ form {
   color: #b0b0b0;
 }
 
-input {
+input 
+{
+  width: 100%;
   padding: 0.75rem;
-  border: 1px solid #d0d0d0;
+  border: 1px solid var(--corBord);
   border-radius: 6px;
   font-size: 1rem;
 }
@@ -102,5 +110,53 @@ button.botCancel {
 img.logo
 {
   padding-top: 4rem;
-  
 }
+
+.card 
+{ 
+  background: white; 
+  border-radius: 12px; 
+  padding: 1.5rem; 
+  box-shadow: 0 4px 12px var(--corShad); 
+}
+    
+input, select
+{ 
+  width: 100%; 
+  padding: 12px; 
+  margin-bottom: 12px; 
+  border-radius: 8px; 
+  border: 1px solid #cbd5e0; 
+  font-size: 15px; 
+  background: #fff; 
+}
+
+button 
+{ 
+  background: #2563eb; 
+  color: white; 
+  font-weight: bold; 
+  border: none; 
+  cursor: pointer; 
+}
+
+button.secondary 
+{ 
+  background: #64748b; 
+}
+    
+.hidden 
+{ 
+  display: none; 
+}
+    
+.med-card 
+{ 
+  border-bottom: 1px solid #e2e8f0; 
+  padding: 12px 0; 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+}
+
+

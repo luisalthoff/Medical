@@ -15,11 +15,49 @@
     <link rel="icon" href="img/logo-192.png">
     <link rel="apple-touch-icon" href="img/logo-192.png">
     <link rel="stylesheet" href="css/style.css">
+
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="app.js"></script>
+    <script src="js/constants.js"></script>
+    <script src="js/login.js"></script>
+
   </head>
 
   <body>
     <main id="app">
       <img class="logo" src="img/jcpf.svg">
+
+
+     <!-- APP MAIN CONTAINER -->
+    <div id="appSection" class="card hidden">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <span id="userStatus" style="font-weight: bold; color: #475569;"></span>
+        <button class="secondary" style="width: auto; padding: 6px 12px;" onclick="handleLogout()">Sign Out</button>
+      </div>
+
+      <!-- DOCTOR PORTAL -->
+      <div id="doctorUI" class="hidden">
+        <h3>🩺 Doctor Dashboard</h3>
+        <select id="patientSelect">
+          <option value="">Select Patient...</option>
+        </select>
+        <input type="text" id="medName" placeholder="Medication Name (e.g. Aspirin)">
+        <input type="text" id="dosage" placeholder="Dosage (e.g. 100mg)">
+        <input type="number" id="duration" placeholder="Duration in Days">
+        <button onclick="createPrescription()">Issue Prescription</button>
+      </div>
+
+      <!-- PATIENT PORTAL -->
+      <div id="patientUI" class="hidden">
+        <h3>📋 My Prescriptions</h3>
+        <div id="prescriptionList">Loading prescriptions...</div>
+
+        <h3 style="margin-top: 24px;">📊 Log Vitals (Optional)</h3>
+        <input type="text" id="bpInput" placeholder="Blood Pressure (e.g., 120/80)">
+        <input type="number" step="0.1" id="tempInput" placeholder="Temperature (°C)">
+      </div>
+    </div>
     </main>
 
     <!-- LOGIN WINDOW-->
@@ -29,18 +67,16 @@
         <input type="password" placeholder="Senha" required autocomplete="current-password">
         <div class="actions">
           <button type="button" class="botCancel" onclick="this.closest('dialog').close()">Cancelar</button>
-          <button type="submit" class="botLogin">Login</button>
+          <button type="submit" class="botLogin" onclick="handleLogin()">Login</button>
         </div>
       </form>
     </dialog>
     <!-- login window-->
        
-    <script src="js/login.js"></script>
-    <script src="js/app.js"></script>
-
     <script>
       window.addEventListener('DOMContentLoaded', appInit)
     </script>
   
   </body>
 </html>
+
