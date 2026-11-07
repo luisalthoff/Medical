@@ -17,7 +17,7 @@ window.addEventListener('load', async () =>
 
 function appInit()
 {
-  openLogin()
+  document.getElementById('login-modal').showModal();
 }
 
 
