@@ -6,41 +6,50 @@ const SUPABASE_URL = 'https://sezknoecawzvqqpvegwr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_iOpyBZUmPY5V88TWZ-s7Rw_NQjqqbqL';
 const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+const SUPABASE_URL = 'https://supabase.co';
+const SUPABASE_KEY = 'sb_publishable_iOpyBZUmPY5V88TWZ-s7Rw_NQjqqbqL';
+const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
 let currentUser = null;
 let userRole = null;
 
-window.addEventListener('load', async () =>
-{
+// Modern standard replaces window.onload with targeted DOMContentLoaded
+window.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await dbClient.auth.getSession();
   if (session) setupSession(session.user);
+  
+  // Bind submission event securely to the login form
+  document.getElementById('login-form')?.addEventListener('submit', handleLogin);
 });
 
-function appInit()
-{
+function appInit() {
   document.getElementById('login-modal').showModal();
 }
 
+async function handleLogin(event) {
+  event.preventDefault(); // Prevents modern browser layout refresh loops
+  
+  // Baseline FormData primitive extracts credentials automatically by input "name"
+  const formData = new FormData(event.target);
+  const credentials = Object.fromEntries(formData.entries());
 
-async function handleLogin()
-{
-  const email = document.getElementById('email').value;
-  const password = document.getElementById('password').value;
+  if (!credentials.email || !credentials.password) return;
 
-  if (!email || !password) return alert('Please enter both email and password.');
-
-  const { data, error } = await dbClient.auth.signInWithPassword({ email, password });
-  if (error) alert('Login failed: ' + error.message);
-  else setupSession(data.user);
+  const { data, error } = await dbClient.auth.signInWithPassword(credentials);
+  if (error) {
+    alert(`Login failed: ${error.message}`);
+  } else {
+    setupSession(data.user);
+    event.target.closest('dialog').close(); // Natively shuts the dialog window
+  }
 }
 
-async function handleLogout()
-{
+async function handleLogout() {
   await dbClient.auth.signOut();
   location.reload();
 }
 
-async function setupSession(user)
-{
+async function setupSession(user) {
   currentUser = user;
   document.getElementById('authSection').classList.add('hidden');
   document.getElementById('appSection').classList.remove('hidden');
@@ -50,32 +59,27 @@ async function setupSession(user)
 
   document.getElementById('userStatus').innerText = `${profile ? profile.full_name : user.email} (${userRole.toUpperCase()})`;
 
-  if (userRole === 'doctor')
-  {
+  if (userRole === 'doctor') {
     document.getElementById('doctorUI').classList.remove('hidden');
     loadPatientDropdown();
-  } else
-  {
+  } else {
     document.getElementById('patientUI').classList.remove('hidden');
     loadPatientPrescriptions();
   }
 }
 
-    // Populate Doctor's Patient Dropdown
-async function loadPatientDropdown()
-{
+async function loadPatientDropdown() {
   const { data: patients, error } = await dbClient.from('profiles').select('id, full_name').eq('role', 'patient');
   const select = document.getElementById('patientSelect');
   
-  if (error) return alert('Error loading patients: ' + error.message);
+  if (error) return alert(`Error loading patients: ${error.message}`);
   
-  select.innerHTML = '<option value="">Select Patient...</option>' + patients.map(p => `
-    <option value="${p.id}">${p.full_name}</option>
-  `).join('');
+  // Using structural arrays maps options smoothly
+  select.innerHTML = '<option value="">Select Patient...</option>' + 
+    patients.map(p => `<option value="${p.id}">${p.full_name}</option>`).join('');
 }
 
-async function createPrescription()
-{
+async function createPrescription() {
   const pId = document.getElementById('patientSelect').value;
   const med = document.getElementById('medName').value;
   const dosage = document.getElementById('dosage').value;
@@ -83,26 +87,25 @@ async function createPrescription()
 
   if (!pId) return alert('Please select a patient from the dropdown.');
 
-  const { error } = await dbClient.from('prescriptions').insert([
-  {
+  const { error } = await dbClient.from('prescriptions').insert([{
     patient_id: pId,
     doctor_id: currentUser.id,
     medication_name: med,
     dosage: dosage,
     frequency: 'Daily',
-    duration_days: parseInt(duration) || 7
+    duration_days: parseInt(duration, 10) || 7 // Always provide a base radix for integer casting
   }]);
 
-  if (error) alert('Error: ' + error.message);
+  if (error) alert(`Error: ${error.message}`);
   else alert('Prescription issued successfully!');
 }
 
-async function loadPatientPrescriptions()
-{
-  const { data: meds, error } = await dbClient.from('prescriptions').select('*');
+async function loadPatientPrescriptions() {
+  // Explicitly filtering by patient_id protects user session separation cleanly
+  const { data: meds, error } = await dbClient.from('prescriptions').select('*').eq('patient_id', currentUser.id);
   const container = document.getElementById('prescriptionList');
   
-  if (error) return container.innerHTML = 'Error: ' + error.message;
+  if (error) return container.innerHTML = `Error: ${error.message}`;
   if (!meds || meds.length === 0) return container.innerHTML = 'No active prescriptions.';
 
   container.innerHTML = meds.map(m => `
@@ -116,8 +119,7 @@ async function loadPatientPrescriptions()
   `).join('');
 }
 
-async function markDoseTaken(rxId)
-{
+async function markDoseTaken(rxId) {
   const bp = document.getElementById('bpInput').value;
   const temp = document.getElementById('tempInput').value;
 
@@ -128,7 +130,6 @@ async function markDoseTaken(rxId)
     temperature: temp ? parseFloat(temp) : null
   }]);
 
-  if (error) alert('RLS Rejected Log: ' + error.message);
+  if (error) alert(`RLS Rejected Log: ${error.message}`);
   else alert('Dose & Vitals logged securely!');
 }
-  

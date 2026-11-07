@@ -62,8 +62,8 @@
     <!-- LOGIN WINDOW-->
     <dialog id="login-modal">
       <form method="dialog">
-        <input type="email" value="jcpf@jcpf.com">  <!-- placeholder="Usuário" required autocomplete="username" -->
-        <input type="password" value="jcpf123">     <!-- placeholder="Senha" required autocomplete="current-password" -->
+        <input type="email" name="email" value="jcpf@jcpf.com">  <!-- placeholder="Usuário" required autocomplete="username" -->
+        <input type="password" name="password" value="jcpf123">     <!-- placeholder="Senha" required autocomplete="current-password" -->
         <div class="actions">
           <button type="button" class="botCancel" onclick="this.closest('dialog').close()">Cancelar</button>
           <button type="submit" class="botLogin" onclick="handleLogin()">Login</button>
