@@ -23,22 +23,32 @@ function appInit() {
   document.getElementById('login-modal').showModal();
 }
 
-async function handleLogin(event) {
+async function handleLogin(event)
+{
   event.preventDefault(); // Prevents modern browser layout refresh loops
   
-  // Baseline FormData primitive extracts credentials automatically by input "name"
+  // Baseline FormData primitive extracts credentials automatically by input "name" 
   const formData = new FormData(event.target);
   const credentials = Object.fromEntries(formData.entries());
 
   if (!credentials.email || !credentials.password) return;
 
   const { data, error } = await dbClient.auth.signInWithPassword(credentials);
+  if (error)
+  {
+    console.dir(error); // Logs the full nested object structure
+    console.log("Error Code:", error.code); 
+    console.log("HTTP Status:", error.status);
+  }
+  
+/*  const { data, error } = await dbClient.auth.signInWithPassword(credentials);
   if (error) {
     alert(`Login failed: ${error.message}`);
   } else {
     setupSession(data.user);
     event.target.closest('dialog').close(); // Natively shuts the dialog window
   }
+  */
 }
 
 async function handleLogout() {
