@@ -16,7 +16,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   if (session) setupSession(session.user);
   
   // Bind submission event securely to the login form
-  document.getElementById('login-form')?.addEventListener('submit', handleLogin);
+  document.getElementById('login-modal')?.addEventListener('submit', handleLogin);
 });
 
 function appInit() {
