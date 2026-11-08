@@ -3,7 +3,7 @@ const TEST_DOCTOR_PWD = "jcpf123"
 const TEST_PATIENT_UID = "greice@teste.com"
 const TEST_PATIENT_PWD = "greice123"
 
-const SUPABASE_URL = 'https://supabase.co';
+const SUPABASE_URL = 'https://sezknoecawzvqqpvegwr.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_iOpyBZUmPY5V88TWZ-s7Rw_NQjqqbqL';
 const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -25,30 +25,20 @@ function appInit() {
 
 async function handleLogin(event)
 {
-  event.preventDefault(); // Prevents modern browser layout refresh loops
-  
-  // Baseline FormData primitive extracts credentials automatically by input "name" 
+  event.preventDefault(); 
   const formData = new FormData(event.target);
   const credentials = Object.fromEntries(formData.entries());
 
   if (!credentials.email || !credentials.password) return;
-
-  const { data, error } = await dbClient.auth.signInWithPassword(credentials);
-  if (error)
-  {
-    console.dir(error); // Logs the full nested object structure
-    console.log("Error Code:", error.code); 
-    console.log("HTTP Status:", error.status);
-  }
   
-/*  const { data, error } = await dbClient.auth.signInWithPassword(credentials);
+  const { data, error } = await dbClient.auth.signInWithPassword(credentials);
   if (error) {
     alert(`Login failed: ${error.message}`);
   } else {
     setupSession(data.user);
     event.target.closest('dialog').close(); // Natively shuts the dialog window
   }
-  */
+  
 }
 
 async function handleLogout() {
@@ -58,7 +48,7 @@ async function handleLogout() {
 
 async function setupSession(user) {
   currentUser = user;
-  document.getElementById('authSection').classList.add('hidden');
+  document.getElementById('login-modal').classList.add('hidden');
   document.getElementById('appSection').classList.remove('hidden');
 
   const { data: profile } = await dbClient.from('profiles').select('*').eq('id', user.id).single();
