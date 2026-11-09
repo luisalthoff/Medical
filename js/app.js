@@ -1,29 +1,13 @@
-const TEST_DOCTOR_UID = "jcpf@jcpf.com"
-const TEST_DOCTOR_PWD = "jcpf123"
-const TEST_PATIENT_UID = "greice@teste.com"
-const TEST_PATIENT_PWD = "greice123"
-
-const SUPABASE_URL = 'https://rmipwhipavlapgpfjaxk.supabase.co'
+const SUPABASE_URL = 'https://rmipwhipavlapgpfjaxk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_DePCBxQvrPxz0xZd99aITA_lPJFVPU2';
 const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const btn = document.getElementById('botao');
-const frmAdmin = document.getElementById('admin');
-
-
-
+const frmAdmin = document.getElementById("frmAdmin");
+const frmPatient = document.getElementById("frmPatient");
 let currentUser = null;
 let userRole = null;
-let admin = false;
 
-
-
-function appInit()
-{
-  //document.getElementById('login-modal').showModal();
-}
-
-async function handleLogin(event)
+async function appInit(event)
 {
   event.preventDefault(); 
   const formData = new FormData(event.target);
@@ -39,7 +23,6 @@ async function handleLogin(event)
   }
   else
   {
-    alert("login ok");
     setupSession(data.user);
     event.target.closest('dialog').close(); 
   }
@@ -48,32 +31,32 @@ async function handleLogin(event)
 async function setupSession(user)
 {
   currentUser = user;
-  
-  const { data: profile } = await dbClient.from('profile').select('*').eq('id', user.id).single();
-  userRole = profile ? profile.role : 'patient';
+  userRole = user.app_metadata?.role || user.user_metadata?.role || 'nada';
+
+  //const { data: profile } = await dbClient.from('profile').select('*').eq('id', user.id).single();
+  //userRole = profile ? profile.role : 'patient';
 
   //document.getElementById('userStatus').innerText = `${profile ? profile.full_name : user.email} (${userRole.toUpperCase()})`;
 
-  if (userRole === 'admin')
-  {
+  applyRoleVisibility(userRole);
+  //if (userRole === 'admin')
+  //{
     //admin = true;
-    document.getElementById('admin').classList.toggle('esconde');
+    //document.getElementById('admin').classList.toggle('esconde');
     //loadPatientDropdown();
-  } else {
-    document.getElementById('patient').classList.toggle('esconde');
+  //}
+  //else {
+  //  document.getElementById('patient').classList.toggle('esconde');
     //loadPatientPrescriptions();
-  }
+  //}
 }
 
 
-document.addEventListener('click', (e) => 
+function applyRoleVisibility(role)
 {
-  if (e.target && e.target.id === 'botao') 
-  {
-    alert("ok");
-    document.getElementById('frmAdmin').classList.remove('esconde')
-  }
-});
+  frmAdmin.toggleAttribute('hidden', role !== 'admin');
+  frmPatient.toggleAttribute('hidden', role !== 'patient');
+}
 
 /*
 async function loadPatientDropdown() {
