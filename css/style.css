@@ -6,26 +6,29 @@
   --corShad: #252525;
 }
 
-* {
+* 
+{
   box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
 
 html,
-body {
+body
+{
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
 }
 
-body {
+body 
+{
   overflow: hidden;
 }
 
-#app {
-  min-height: 100%;
-  height: 100%;
+#main 
+{
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -34,10 +37,18 @@ body {
     max(12px, env(safe-area-inset-right))
     max(8px, env(safe-area-inset-bottom))
     max(12px, env(safe-area-inset-left));
-  background: var(--radar-black);
 }
 
+form 
+{
+  display: grid;
+  gap: 1rem;
+}
 
+.esconde 
+{ 
+  display: none !important;
+}
 
 
 /* ================= LOGIN WINDOW ================== */
@@ -51,16 +62,9 @@ dialog
   width: min(300px, 90vw);
 }
 
-/* Modern native backdrop styling */
 dialog::backdrop 
 {
   background: rgba(0, 0, 0, 0.2);
-}
-
-form 
-{
-  display: grid;
-  gap: 1rem;
 }
 
 ::placeholder
@@ -72,9 +76,15 @@ input
 {
   width: 100%;
   padding: 0.75rem;
-  border: 1px solid var(--corBord);
+  border: 1px solid var(--corBord); 
   border-radius: 6px;
   font-size: 1rem;
+}
+
+input:focus
+{
+  outline:none;
+  border-color: blue;
 }
 
 .actions {
@@ -120,11 +130,10 @@ img.logo
   box-shadow: 0 4px 12px var(--corShad); 
 }
     
-input, select
+select
 { 
   width: 100%; 
   padding: 12px; 
-  margin-bottom: 12px; 
   border-radius: 8px; 
   border: 1px solid #cbd5e0; 
   font-size: 15px; 

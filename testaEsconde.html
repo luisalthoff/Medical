@@ -1,0 +1,35 @@
+<style>
+
+.mostra-esconde 
+{
+  display: none;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.esconde 
+{ 
+  display: none !important;
+}
+
+</style>
+
+
+
+<button id="toggle-btn">Toggle Menu</button>
+
+<div id="menu" class="hideShow">
+  <div>Item 1</div>
+  <div>Item 2</div>
+</div>
+
+<script>
+  const toggleBtn = document.getElementById('toggle-btn');
+  const menu = document.getElementById('menu');
+
+  toggleBtn.addEventListener('click', () => 
+  {
+    menu.classList.toggle('esconde');
+  });
+
+</script>

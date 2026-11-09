@@ -3,23 +3,21 @@ const TEST_DOCTOR_PWD = "jcpf123"
 const TEST_PATIENT_UID = "greice@teste.com"
 const TEST_PATIENT_PWD = "greice123"
 
-const SUPABASE_URL = 'https://sezknoecawzvqqpvegwr.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_iOpyBZUmPY5V88TWZ-s7Rw_NQjqqbqL';
+const SUPABASE_URL = 'https://rmipwhipavlapgpfjaxk.supabase.co'
+const SUPABASE_KEY = 'sb_publishable_DePCBxQvrPxz0xZd99aITA_lPJFVPU2';
 const dbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const btn = document.getElementById('botao');
+const frmAdmin = document.getElementById('admin');
+
+
 
 let currentUser = null;
 let userRole = null;
+let admin = false;
 
-// Modern standard replaces window.onload with targeted DOMContentLoaded
-window.addEventListener('DOMContentLoaded', async () => {
-  const { data: { session } } = await dbClient.auth.getSession();
-  if (session) setupSession(session.user);
-  
-  // Bind submission event securely to the login form
-  document.getElementById('login-modal')?.addEventListener('submit', handleLogin);
-});
-
-function appInit() {
+function appInit()
+{
   document.getElementById('login-modal').showModal();
 }
 
@@ -32,39 +30,50 @@ async function handleLogin(event)
   if (!credentials.email || !credentials.password) return;
   
   const { data, error } = await dbClient.auth.signInWithPassword(credentials);
-  if (error) {
-    alert(`Login failed: ${error.message}`);
-  } else {
-    setupSession(data.user);
-    event.target.closest('dialog').close(); // Natively shuts the dialog window
-  }
   
+  if (error)
+  {
+    alert(`Login failed: ${error.message}`);
+  }
+  else
+  {
+    alert("login ok");
+    setupSession(data.user);
+    event.target.closest('dialog').close(); 
+  }
 }
 
-async function handleLogout() {
-  await dbClient.auth.signOut();
-  location.reload();
-}
-
-async function setupSession(user) {
+async function setupSession(user)
+{
   currentUser = user;
-  document.getElementById('login-modal').classList.add('hidden');
-  document.getElementById('appSection').classList.remove('hidden');
-
-  const { data: profile } = await dbClient.from('profiles').select('*').eq('id', user.id).single();
+  
+  const { data: profile } = await dbClient.from('profile').select('*').eq('id', user.id).single();
   userRole = profile ? profile.role : 'patient';
 
-  document.getElementById('userStatus').innerText = `${profile ? profile.full_name : user.email} (${userRole.toUpperCase()})`;
+  //document.getElementById('userStatus').innerText = `${profile ? profile.full_name : user.email} (${userRole.toUpperCase()})`;
 
-  if (userRole === 'doctor') {
-    document.getElementById('doctorUI').classList.remove('hidden');
-    loadPatientDropdown();
+  if (userRole === 'admin')
+  {
+    //admin = true;
+    document.getElementById('admin').classList.toggle('esconde');
+    //loadPatientDropdown();
   } else {
-    document.getElementById('patientUI').classList.remove('hidden');
-    loadPatientPrescriptions();
+    document.getElementById('patient').classList.toggle('esconde');
+    //loadPatientPrescriptions();
   }
 }
 
+
+document.addEventListener('click', (e) => 
+{
+  if (e.target && e.target.id === 'botao') 
+  {
+    alert("ok");
+    frmAdmin.classList.remove('esconde')
+  }
+});
+
+/*
 async function loadPatientDropdown() {
   const { data: patients, error } = await dbClient.from('profiles').select('id, full_name').eq('role', 'patient');
   const select = document.getElementById('patientSelect');
@@ -74,6 +83,12 @@ async function loadPatientDropdown() {
   // Using structural arrays maps options smoothly
   select.innerHTML = '<option value="">Select Patient...</option>' + 
     patients.map(p => `<option value="${p.id}">${p.full_name}</option>`).join('');
+}
+
+async function handleLogout()
+{
+  await dbClient.auth.signOut();
+  location.reload();
 }
 
 async function createPrescription() {
@@ -97,23 +112,14 @@ async function createPrescription() {
   else alert('Prescription issued successfully!');
 }
 
-async function loadPatientPrescriptions() {
+async function loadPatientPrescriptions()
+{
   // Explicitly filtering by patient_id protects user session separation cleanly
   const { data: meds, error } = await dbClient.from('prescriptions').select('*').eq('patient_id', currentUser.id);
   const container = document.getElementById('prescriptionList');
   
   if (error) return container.innerHTML = `Error: ${error.message}`;
   if (!meds || meds.length === 0) return container.innerHTML = 'No active prescriptions.';
-
-  container.innerHTML = meds.map(m => `
-    <div class="med-card">
-      <div>
-        <strong>${m.medication_name}</strong> - ${m.dosage}<br>
-        <small>${m.duration_days} Days remaining</small>
-      </div>
-      <button style="width: auto; margin:0;" onclick="markDoseTaken('${m.id}')">Take Dose</button>
-    </div>
-  `).join('');
 }
 
 async function markDoseTaken(rxId) {
@@ -130,3 +136,6 @@ async function markDoseTaken(rxId) {
   if (error) alert(`RLS Rejected Log: ${error.message}`);
   else alert('Dose & Vitals logged securely!');
 }
+*/
+
+  

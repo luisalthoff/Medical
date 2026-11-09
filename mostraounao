@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    /* This hides the form by default */
+    .esconde {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- The form starts hidden -->
+  <form class="esconde" id="myForm">
+    <input type="text" placeholder="Enter name">
+    <button type="submit">Submit</button>
+  </form>
+
+  <!-- Button to trigger visibility -->
+  <button type="button" id="showBtn">Show Form</button>
+
+  <script>
+    const btn = document.getElementById('showBtn');
+    const form = document.getElementById('myForm');
+
+    btn.addEventListener('click', () => {
+      // Removes 'hide', causing the form to appear
+      form.classList.remove('esconde'); 
+    });
+  </script>
+
+</body>
+</html>
