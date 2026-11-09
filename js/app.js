@@ -16,9 +16,11 @@ let currentUser = null;
 let userRole = null;
 let admin = false;
 
+
+
 function appInit()
 {
-  document.getElementById('login-modal').showModal();
+  //document.getElementById('login-modal').showModal();
 }
 
 async function handleLogin(event)
@@ -69,7 +71,7 @@ document.addEventListener('click', (e) =>
   if (e.target && e.target.id === 'botao') 
   {
     alert("ok");
-    frmAdmin.classList.remove('esconde')
+    document.getElementById('frmAdmin').classList.remove('esconde')
   }
 });
 
