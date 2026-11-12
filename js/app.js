@@ -1,7 +1,7 @@
 
 const SUPABASE_URL = 'https://rmipwhipavlapgpfjaxk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_DePCBxQvrPxz0xZd99aITA_lPJFVPU2';
-const db = supabase.createClient("SUPABASE_URL", "SUPABASE_KEY");
+const db = window.supabase.createClient("SUPABASE_URL", "SUPABASE_KEY");
 
 const frmLogin = document.getElementById("frmLogin");
 const appContainer = document.getElementById("appContainer");
