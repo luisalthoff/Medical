@@ -73,7 +73,8 @@ db.auth.onAuthStateChange(async (_event, session) => {
 // 3. Populate Admin Patient Dropdown & Medication Checklist
 async function loadAdminDropdowns() {
   const [{ data: patients }, { data: meds }] = await Promise.all([
-    db.from('profile').select('id, name').eq('role', 'patient').order('name'),
+    //db.from('profile').select('id, name').eq('role', 'patient').order('name'),
+    db.from('profile').select('*').order('name'),
     db.from('medication').select('*').order('name')
   ]);
 
