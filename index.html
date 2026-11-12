@@ -1,100 +1,83 @@
-<!DOCTYPE html>
 <html lang="pt-BR">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-    <meta name="theme-color" content="#0b0b0b">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <meta name="apple-mobile-web-app-title" content="jcpf">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Medicamentos</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://jsdelivr.net" defer></script>
+  <script src="js/app.js" defer></script>
+</head>
+<body>
 
-    <title>JCPF</title>
+  <!-- 1. LOGIN SCREEN -->
+  <form id="frmLogin" class="card">
+    <h2>Acesso ao Sistema</h2>
+    <input type="email" id="loginEmail" placeholder="E-mail" required>
+    <input type="password" id="loginPassword" placeholder="Senha" required>
+    <button type="submit" class="btn">Entrar</button>
+    <p id="loginError" class="error-text" hidden></p>
+  </form>
 
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="img/logo-192.png">
-    <link rel="apple-touch-icon" href="img/logo-192.png">
-    <link rel="stylesheet" href="css/style.css">
+  <!-- 2. MAIN APP (Hidden until logged in) -->
+  <main id="appContainer" hidden>
+    <header class="top-bar">
+      <span id="userStatus"></span>
+      <button type="button" id="btnLogout" class="btn btn-secondary">Sair</button>
+    </header>
 
-    <!-- Supabase CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="js/app.js"></script>    
-  </head>
+    <!-- ADMIN PANEL: Patient Dropdown + Multi-Select Medication Checklist -->
+    <form id="frmAdmin" class="card" hidden>
+      <h3>Configurar Tratamento (Admin)</h3>
 
-  <body>
+      <!-- Step 1: Pick a Patient -->
+      <div class="field-group">
+        <label for="patientSelect"><strong>1. Selecione o Paciente:</strong></label>
+        <select id="patientSelect" required>
+          <option value="">-- Escolha um paciente --</option>
+        </select>
+      </div>
 
-    <!-- 1. LOGIN SCREEN -->
-    <form id="frmLogin" class="card">
-      <h2>Acesso ao Sistema</h2>
-      <input type="email" id="loginEmail" placeholder="E-mail" required>
-      <input type="password" id="loginPassword" placeholder="Senha" required>
-      <button type="submit" class="btn">Entrar</button>
-      <p id="loginError" class="error-text" hidden></p>
+      <!-- Step 2: Appears once a patient is selected -->
+      <div id="medSelectionArea" hidden>
+        <div class="field-group">
+          <label for="treatmentStartDate"><strong>2. Data de Início do Tratamento:</strong></label>
+          <input type="date" id="treatmentStartDate" required>
+        </div>
+
+        <label><strong>3. Selecione os Medicamentos (marque e ajuste se necessário):</strong></label>
+        <details class="med-dropdown" open>
+          <summary>Lista de Medicamentos Disponíveis</summary>
+          <div id="medChecklist" class="med-checklist"></div>
+        </details>
+
+        <button type="submit" class="btn">Salvar Prescrições do Paciente</button>
+      </div>
     </form>
 
-    <!-- 2. MAIN APP (Hidden until logged in) -->
-    <main id="appContainer" hidden>
-      <header class="top-bar">
-        <span id="userStatus"></span>
-        <button type="button" id="btnLogout" class="btn btn-secondary">Sair</button>
-      </header>
+    <!-- SHARED: Timeline Navigation & 12-Column Schedule Grid -->
+    <section id="scheduleSection" hidden>
+      <div class="controls">
+        <button type="button" class="btn" id="prevDay" disabled>◀ Dia Anterior</button>
+        <span id="currentDayDisplay"><strong>--/--</strong></span>
+        <button type="button" class="btn" id="nextDay">Próximo Dia ▶</button>
+      </div>
 
-      <!-- ADMIN PANEL: Patient Dropdown + Multi-Select Medication Checklist -->
-      <form id="frmAdmin" class="card" hidden>
-        <h3>Configurar Tratamento (Admin)</h3>
+      <div class="grid-container" id="medGrid">
+        <div class="grid-cell grid-header med-name">Medicamento</div>
+        <div class="grid-cell grid-header">mg</div>
+        <div class="grid-cell grid-header">Dosagem</div>
+        <div class="grid-cell grid-header">Duração</div>
+        <div class="grid-cell grid-header">Intervalo</div>
+        <div class="grid-cell grid-header">06:00</div>
+        <div class="grid-cell grid-header">10:00</div>
+        <div class="grid-cell grid-header">12:00</div>
+        <div class="grid-cell grid-header">14:00</div>
+        <div class="grid-cell grid-header">18:00</div>
+        <div class="grid-cell grid-header">22:00</div>
+        <div class="grid-cell grid-header">00:00</div>
+      </div>
+    </section>
+  </main>
 
-        <!-- Step 1: Pick a Patient -->
-        <div class="field-group">
-          <label for="patientSelect"><strong>1. Selecione o Paciente:</strong></label>
-          <select id="patientSelect" required>
-            <option value="">-- Escolha um paciente --</option>
-          </select>
-        </div>
-
-        <!-- Step 2: Appears once a patient is selected -->
-        <div id="medSelectionArea" hidden>
-          <div class="field-group">
-            <label for="treatmentStartDate"><strong>2. Data de Início do Tratamento:</strong></label>
-            <input type="date" id="treatmentStartDate" required>
-          </div>
-
-          <label><strong>3. Selecione os Medicamentos (marque e ajuste se necessário):</strong></label>
-          <details class="med-dropdown" open>
-            <summary>Lista de Medicamentos Disponíveis</summary>
-            <div id="medChecklist" class="med-checklist"></div>
-          </details>
-
-          <button type="submit" class="btn">Salvar Prescrições do Paciente</button>
-        </div>
-      </form>
-
-      <!-- SHARED: Timeline Navigation & 12-Column Schedule Grid -->
-      <section id="scheduleSection" hidden>
-        <div class="controls">
-          <button type="button" class="btn" id="prevDay" disabled>◀ Dia Anterior</button>
-          <span id="currentDayDisplay"><strong>--/--</strong></span>
-          <button type="button" class="btn" id="nextDay">Próximo Dia ▶</button>
-        </div>
-
-        <div class="grid-container" id="medGrid">
-          <div class="grid-cell grid-header med-name">Medicamento</div>
-          <div class="grid-cell grid-header">mg</div>
-          <div class="grid-cell grid-header">Dosagem</div>
-          <div class="grid-cell grid-header">Duração</div>
-          <div class="grid-cell grid-header">Intervalo</div>
-          <div class="grid-cell grid-header">06:00</div>
-          <div class="grid-cell grid-header">10:00</div>
-          <div class="grid-cell grid-header">12:00</div>
-          <div class="grid-cell grid-header">14:00</div>
-          <div class="grid-cell grid-header">18:00</div>
-          <div class="grid-cell grid-header">22:00</div>
-          <div class="grid-cell grid-header">00:00</div>
-        </div>
-      </section>
-    </main>
-        
-    
-
-
-  </body>
+</body>
 </html>
