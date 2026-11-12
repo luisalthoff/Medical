@@ -1,7 +1,7 @@
 
 const SUPABASE_URL = 'https://rmipwhipavlapgpfjaxk.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_DePCBxQvrPxz0xZd99aITA_lPJFVPU2';
-const db = window.supabase.createClient("SUPABASE_URL", "SUPABASE_KEY");
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const frmLogin = document.getElementById("frmLogin");
 const appContainer = document.getElementById("appContainer");
@@ -22,7 +22,8 @@ let activePatientId = null;
 let dayOffset = 0;
 
 // 1. Login & Logout Handlers
-frmLogin.addEventListener("submit", async (e) => {
+frmLogin.addEventListener("submit", async (e) =>
+{
   e.preventDefault();
   const errorEl = document.getElementById("loginError");
   errorEl.hidden = true;
@@ -214,7 +215,7 @@ async function loadGridData() {
   const baseStartDate = new Date(profile.treatment_start_date + 'T00:00:00');
   const activeDate = new Date(baseStartDate);
   activeDate.setDate(baseStartDate.getDate() + dayOffset);
-  const isoDate = activeDate.toISOString().split('T');
+  const isoDate = activeDate.toISOString().split('T')[0];
 
   prevBtn.disabled = (dayOffset <= 0);
   dayDisplay.innerHTML = `<strong>${dateFormatter.format(activeDate)}</strong>`;
