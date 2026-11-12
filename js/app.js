@@ -143,7 +143,7 @@ patientSelect.addEventListener("change", async () => {
   }
 });
 
-// 5. Admin Save: Insert All Checked Medications with Custom/Default Values
+// 5. Admin Save: Insert All Checked Meds with Custom/Default Values
 frmAdmin.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (userRole !== 'admin' || !activePatientId) return;
@@ -180,7 +180,7 @@ frmAdmin.addEventListener("submit", async (e) => {
     .update({ treatment_start_date: startDateValue })
     .eq('id', activePatientId);
 
-  const { error } = await db.from('prescriptions').insert(rowsToInsert);
+  const { error } = await db.from('prescription').insert(rowsToInsert);
 
   if (!error) {
     dayOffset = 0;
@@ -220,11 +220,11 @@ async function loadGridData() {
   prevBtn.disabled = (dayOffset <= 0);
   dayDisplay.innerHTML = `<strong>${dateFormatter.format(activeDate)}</strong>`;
 
-  const [{ data: prescriptions }, { data: logs }] = await Promise.all([
-    db.from('prescriptions')
+  const [{ data: prescription }, { data: logs }] = await Promise.all([
+    db.from('prescription')
       .select('id, dosage, duration_days, interval_hours, schedule_times, medication(name, mg)')
       .eq('patient_id', activePatientId),
-    db.from('medication_logs')
+    db.from('medication_log')
       .select('prescription_id, log_time, is_checked')
       .eq('patient_id', activePatientId)
       .eq('log_date', isoDate)
@@ -232,7 +232,7 @@ async function loadGridData() {
 
   const logMap = Object.fromEntries((logs || []).map(l => [`${l.prescription_id}-${l.log_time}`, l.is_checked]));
 
-  (prescriptions || []).forEach(rx => {
+  (prescription || []).forEach(rx => {
     if (dayOffset >= rx.duration_days) return;
 
     const daysLeft = rx.duration_days - dayOffset;
@@ -256,7 +256,7 @@ async function loadGridData() {
         cb.disabled = (userRole !== 'patient');
 
         cb.addEventListener("change", async () => {
-          await db.from('medication_logs').upsert({
+          await db.from('medication_log').upsert({
             prescription_id: rx.id,
             patient_id: activePatientId,
             log_date: isoDate,
