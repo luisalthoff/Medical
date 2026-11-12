@@ -73,15 +73,15 @@ db.auth.onAuthStateChange(async (_event, session) => {
 // 3. Populate Admin Patient Dropdown & Medication Checklist
 async function loadAdminDropdowns() {
   const [{ data: patients }, { data: meds }] = await Promise.all([
-    db.from('profile').select('id, full_name').eq('role', 'patient').order('full_name'),
-    db.from('medications').select('*').order('name')
+    db.from('profile').select('id, name').eq('role', 'patient').order('name'),
+    db.from('medication').select('*').order('name')
   ]);
 
   patientSelect.innerHTML = '<option value="">-- Escolha um paciente --</option>';
   (patients || []).forEach(p => {
     const opt = document.createElement("option");
     opt.value = p.id;
-    opt.textContent = p.full_name || p.id;
+    opt.textContent = p.name || p.id;
     patientSelect.appendChild(opt);
   });
 
@@ -222,7 +222,7 @@ async function loadGridData() {
 
   const [{ data: prescriptions }, { data: logs }] = await Promise.all([
     db.from('prescriptions')
-      .select('id, dosage, duration_days, interval_hours, schedule_times, medications(name, mg)')
+      .select('id, dosage, duration_days, interval_hours, schedule_times, medication(name, mg)')
       .eq('patient_id', activePatientId),
     db.from('medication_logs')
       .select('prescription_id, log_time, is_checked')
@@ -236,7 +236,7 @@ async function loadGridData() {
     if (dayOffset >= rx.duration_days) return;
 
     const daysLeft = rx.duration_days - dayOffset;
-    const medInfo = rx.medications;
+    const medInfo = rx.medication;
 
     const nameCell = document.createElement("div");
     nameCell.className = "grid-cell med-name";
