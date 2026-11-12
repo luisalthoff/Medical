@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Controle de Medicamentos</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://jsdelivr.net" defer></script>
+  <script src="js/app.js" defer></script>
+  <script src="js/medication.js" defer></script>
+</head>
+<body>
+
+  <!-- ADMIN ONLY: Treatment Setup Form -->
+  <form id="frmAdmin" hidden>
+    <h3>Configurar Tratamento (Admin)</h3>
+    
+    <input type="text" id="patientIdInput" placeholder="UUID do Paciente" required>
+    <label>Início do Tratamento: <input type="date" id="treatmentStartDate" required></label>
+
+    <input list="medCatalogList" id="medSearchInput" placeholder="Buscar medicamento (ex: Dipirona 1000mg)" required autocomplete="off">
+    <datalist id="medCatalogList"></datalist>
+
+    <input type="number" id="medDosage" placeholder="Dosagem (cápsulas)" min="1" required>
+    <input type="number" id="medDuration" placeholder="Duração (dias)" min="1" required>
+    <input type="number" id="medInterval" placeholder="Intervalo (horas)" min="1" required>
+    
+    <div class="time-selector">
+      <span>Horários:</span>
+      <label><input type="checkbox" value="06:00"> 06:00</label>
+      <label><input type="checkbox" value="10:00"> 10:00</label>
+      <label><input type="checkbox" value="12:00"> 12:00</label>
+      <label><input type="checkbox" value="14:00"> 14:00</label>
+      <label><input type="checkbox" value="18:00"> 18:00</label>
+      <label><input type="checkbox" value="22:00"> 22:00</label>
+      <label><input type="checkbox" value="00:00"> 00:00</label>
+    </div>
+
+    <button type="submit" class="btn">Adicionar Medicamento</button>
+  </form>
+
+  <!-- PATIENT / SHARED: Timeline Navigation Controls -->
+  <div class="controls">
+    <button type="button" class="btn" id="prevDay" disabled>⏴</button>
+    <span id="currentDayDisplay"><strong>--/--</strong></span>
+    <button type="button" class="btn" id="nextDay">⏵</button>
+  </div>
+
+  <!-- SHARED: 12-Column Medication Schedule Grid -->
+  <div class="grid-container" id="medGrid">
+    <div class="grid-cell grid-header med-name">Medicamento</div>
+    <div class="grid-cell grid-header">mg</div>
+    <div class="grid-cell grid-header">Dosagem</div>
+    <div class="grid-cell grid-header">Duração</div>
+    <div class="grid-cell grid-header">Intervalo</div>
+    <div class="grid-cell grid-header">06:00</div>
+    <div class="grid-cell grid-header">10:00</div>
+    <div class="grid-cell grid-header">12:00</div>
+    <div class="grid-cell grid-header">14:00</div>
+    <div class="grid-cell grid-header">18:00</div>
+    <div class="grid-cell grid-header">22:00</div>
+    <div class="grid-cell grid-header">00:00</div>
+  </div>
+
+</body>
+</html>

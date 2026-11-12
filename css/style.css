@@ -4,6 +4,8 @@
   --corVerm: #ff3b30;
   --corBord: #d0d0d0;
   --corShad: #252525;
+
+  --tamFnt: 2rem;
 }
 
 * 
@@ -74,13 +76,17 @@ dialog::backdrop
   color: #b0b0b0;
 }
 
+button
+{
+  font-size: 30px;
+}
 input 
 {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid var(--corBord); 
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: var(--tamFnt);
 }
 
 input:focus
@@ -130,7 +136,7 @@ select
   padding: 12px; 
   border-radius: 8px; 
   border: 1px solid #cbd5e0; 
-  font-size: 15px; 
+  font-size: var(--tamFnt); 
   background: #fff; 
 }
 
@@ -140,11 +146,11 @@ button
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  font-weight: 500;
   background: #2563eb; 
   color: white; 
   border: none; 
-  cursor: pointer; 
+  cursor: pointer;
+  font-size: var(--tamFnt); 
 }
 
 button.secondary 

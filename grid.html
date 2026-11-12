@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medication Grid Tracker</title>
+  <style>
+    :root {
+      --primary: #4a90e2;
+      --header-bg: #82c0e9;
+      --border-color: #ccc;
+      --text-dark: #333;
+    }
+
+    body 
+    {
+      font-family: system-ui, -apple-system, sans-serif;
+      margin: 20px;
+      color: var(--text-dark);
+    }
+
+    .controls 
+    {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .btn 
+    {
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 3.5rem;
+      padding-inline: 20px;
+    }
+
+    .btn:disabled 
+    {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* 12 x 12 CSS Grid Layout Primitive */
+    .grid-container {
+      display: grid;
+      grid-template-columns: 140px 60px 80px 80px 80px repeat(7, 1fr);
+      border-left: 1px solid var(--border-color);
+      border-top: 1px solid var(--border-color);
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .grid-cell {
+      padding: 10px;
+      border-right: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      min-height: 40px;
+    }
+
+    /* Header Specific Primitives */
+    .grid-header {
+      background: var(--header-bg);
+      text-align: center;
+    }
+
+    .med-name { justify-content: flex-start}
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Medicação</h2>
+
+  <div class="controls">
+    <label for="startDate">Início</label>
+    <!-- Default set to Nov 9, 2026 -->
+    <input type="date" id="startDate" value="2026-11-09">
+
+    <button class="btn" id="prevDay" disabled>≪</button>
+    <span id="currentDayDisplay">09/11</span>
+    <button class="btn" id="nextDay">≫</button>
+  </div>
+
+  <!-- Main 12x12 Container Grid Layout -->
+  <div class="grid-container" id="medGrid">
+    <!-- Row 1: Headers -->
+    <div class="grid-cell grid-header med-name">Medicamento</div>
+    <div class="grid-cell grid-header">mg</div>
+    <div class="grid-cell grid-header">Dosagem (cápsulas)</div>
+    <div class="grid-cell grid-header">Duração (dias)</div>
+    <div class="grid-cell grid-header">Intervalo (horas)</div>
+    <div class="grid-cell grid-header">06:00</div>
+    <div class="grid-cell grid-header">10:00</div>
+    <div class="grid-cell grid-header">12:00</div>
+    <div class="grid-cell grid-header">14:00</div>
+    <div class="grid-cell grid-header">18:00</div>
+    <div class="grid-cell grid-header">22:00</div>
+    <div class="grid-cell grid-header">00:00</div>
+  </div>
+
+  </body>
+</html>

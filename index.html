@@ -18,56 +18,83 @@
 
     <!-- Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    
+    <script src="js/app.js"></script>    
   </head>
 
   <body>
-    <main id="main">
-      <img class="logo" src="img/jcpf.svg">
 
-      <!-- ADMIN -->
-      <form id="frmAdmin" hidden>
-        <h3>A D M I N</h3>
-        <select id="pacientesList">
-          <option value="">Pacientes...</option>
-        </select>
-        <select id="medicacaoList">
-          <option value="">Medicamentos...</option>
-        </select>          
-      
-        <input type="text" id="dosage" placeholder="Dosagem (e.g. 100mg)">
-        <input type="number" id="duration" placeholder="Duração em dias">
-        <button onclick="createSpreadsheet()">Gerar Planilha</button>
-      </form>
+    <!-- 1. LOGIN SCREEN -->
+    <form id="frmLogin" class="card">
+      <h2>Acesso ao Sistema</h2>
+      <input type="email" id="loginEmail" placeholder="E-mail" required>
+      <input type="password" id="loginPassword" placeholder="Senha" required>
+      <button type="submit" class="btn">Entrar</button>
+      <p id="loginError" class="error-text" hidden></p>
+    </form>
 
-      <!-- PACIENTES -->
-      <form id="frmPatient" hidden>
-        <h3>📋 P A T I E N T</h3>
-        <div id="prescriptionList">Loading prescriptions...</div>
+    <!-- 2. MAIN APP (Hidden until logged in) -->
+    <main id="appContainer" hidden>
+      <header class="top-bar">
+        <span id="userStatus"></span>
+        <button type="button" id="btnLogout" class="btn btn-secondary">Sair</button>
+      </header>
 
-        <h3 style="margin-top: 24px;">📊 Log Vitals (Optional)</h3>
-        <input type="text" id="bpInput" placeholder="Blood Pressure (e.g., 120/80)">
-        <input type="number" step="0.1" id="tempInput" placeholder="Temperature (°C)">
-      </form>
-    </main>
+      <!-- ADMIN PANEL: Patient Dropdown + Multi-Select Medication Checklist -->
+      <form id="frmAdmin" class="card" hidden>
+        <h3>Configurar Tratamento (Admin)</h3>
 
-    <!-- LOGIN WINDOW-->
-    <dialog id="login-modal">
-      <form onsubmit="appInit(event)">
-        <input type="email" name="email" placeholder="email" required autocomplete="email">
-        <input type="password" name="password" placeholder="senha" required autocomplete="current-password">
-        <div class="actions">
-          <button type="button" class="botCancel" onclick="this.closest('dialog').close()">Cancelar</button>
-          <button type="submit" class="botLogin">Entrar</button>
+        <!-- Step 1: Pick a Patient -->
+        <div class="field-group">
+          <label for="patientSelect"><strong>1. Selecione o Paciente:</strong></label>
+          <select id="patientSelect" required>
+            <option value="">-- Escolha um paciente --</option>
+          </select>
+        </div>
+
+        <!-- Step 2: Appears once a patient is selected -->
+        <div id="medSelectionArea" hidden>
+          <div class="field-group">
+            <label for="treatmentStartDate"><strong>2. Data de Início do Tratamento:</strong></label>
+            <input type="date" id="treatmentStartDate" required>
+          </div>
+
+          <label><strong>3. Selecione os Medicamentos (marque e ajuste se necessário):</strong></label>
+          <details class="med-dropdown" open>
+            <summary>Lista de Medicamentos Disponíveis</summary>
+            <div id="medChecklist" class="med-checklist"></div>
+          </details>
+
+          <button type="submit" class="btn">Salvar Prescrições do Paciente</button>
         </div>
       </form>
-    </dialog>
-    <!-- login window-->
-       
-    <script>
-      window.addEventListener('DOMContentLoaded', () => {document.getElementById("login-modal").show()});
-    </script>
-    <script src="js/app.js"></script>
-  
+
+      <!-- SHARED: Timeline Navigation & 12-Column Schedule Grid -->
+      <section id="scheduleSection" hidden>
+        <div class="controls">
+          <button type="button" class="btn" id="prevDay" disabled>◀ Dia Anterior</button>
+          <span id="currentDayDisplay"><strong>--/--</strong></span>
+          <button type="button" class="btn" id="nextDay">Próximo Dia ▶</button>
+        </div>
+
+        <div class="grid-container" id="medGrid">
+          <div class="grid-cell grid-header med-name">Medicamento</div>
+          <div class="grid-cell grid-header">mg</div>
+          <div class="grid-cell grid-header">Dosagem</div>
+          <div class="grid-cell grid-header">Duração</div>
+          <div class="grid-cell grid-header">Intervalo</div>
+          <div class="grid-cell grid-header">06:00</div>
+          <div class="grid-cell grid-header">10:00</div>
+          <div class="grid-cell grid-header">12:00</div>
+          <div class="grid-cell grid-header">14:00</div>
+          <div class="grid-cell grid-header">18:00</div>
+          <div class="grid-cell grid-header">22:00</div>
+          <div class="grid-cell grid-header">00:00</div>
+        </div>
+      </section>
+    </main>
+        
+    
+
+
   </body>
 </html>
